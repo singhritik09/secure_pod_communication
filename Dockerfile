@@ -13,5 +13,5 @@ WORKDIR /app
 RUN chmod +x wisecow.sh
 
 EXPOSE 4499
-
+# RUN wisecow application
 CMD ["./wisecow.sh"]
