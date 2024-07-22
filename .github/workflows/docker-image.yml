@@ -23,4 +23,4 @@ jobs:
       - name: Build and Push
         run: |
           docker build -t singhritik09/wisecow:latest .
-          docker push singhritik09/myapp:latest
+          docker push singhritik09/wisecow:latest
