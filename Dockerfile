@@ -1,10 +1,15 @@
-FROM debian:latest
+FROM ubuntu:latest
 
-RUN apt-get update && apt-get install -y fortune cowsay bash netcat && apt-get clean
+RUN apt-get update && apt-get install -y cowsay fortune netcat
 
-COPY wisecow.sh /usr/local/bin/wisecow.sh
-RUN chmod +x /usr/local/bin/wisecow.sh
+COPY wisecow.sh /app/wisecow.sh
+
+WORKDIR /app
+
+RUN chmod +x wisecow.sh
 
 EXPOSE 4499
 
-CMD ["/usr/local/bin/wisecow.sh"]
+CMD ["./wisecow.sh"]
+
+ENV PATH="/usr/games:${PATH}"
