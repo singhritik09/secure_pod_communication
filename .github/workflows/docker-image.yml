@@ -22,9 +22,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: singhritik09/wisecow:latest
+      - name: Build and Push
+        run: |
+          docker build -t singhritik09/wisecow:latest .
+          docker push singhritik09/wisecow:latest
