@@ -41,23 +41,31 @@ jobs:
 
       - name: Configure kubectl
         run: |
-          echo "${{ secrets.KUBE_CA }}" | base64 --decode > /tmp/ca.crt
+          echo "${{ secrets.KUBE_CA }}" | base64 --decode > /tmp/ca.crt || { echo "Failed to decode base64"; exit 1; }
+
           kubectl config set-cluster minikube \
             --server=${{ secrets.KUBE_SERVER }} \
             --certificate-authority=/tmp/ca.crt
+
           kubectl config set-context minikube \
             --cluster=minikube \
             --user=minikube \
             --namespace=default
+
           kubectl config use-context minikube
         env:
           KUBE_CA: ${{ secrets.KUBE_CA }}
           KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
 
-      - name: Deploy to Kubernetes
+      - name: Apply Kubernetes manifests
         run: |
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
+
+      - name: Get Kubernetes resources
+        run: |
+          kubectl get pods
+          kubectl get services
 
       - name: Port-forward service
         run: |
