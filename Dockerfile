@@ -9,7 +9,7 @@ ENV PATH="/usr/games:${PATH}"
 COPY wisecow.sh /app/wisecow.sh
 
 WORKDIR /app
-
+# Give execution permission
 RUN chmod +x wisecow.sh
 
 EXPOSE 4499
