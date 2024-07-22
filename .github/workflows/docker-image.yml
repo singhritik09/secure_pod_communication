@@ -57,12 +57,22 @@ jobs:
           KUBE_CA: ${{ secrets.KUBE_CA }}
           KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
 
-      - name: Apply Kubernetes manifests
+      - name: Start Minikube
         run: |
           minikube start
+
+      - name: Apply Kubernetes manifests
+        run: |
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
-          minikube service wisecow-service
+
+      - name: Wait for pods to be running
+        run: |
+          for i in {1..30}; do
+            kubectl get pods | grep -q 'Running' && break || sleep 10
+          done
+          kubectl get pods
+
       - name: Get Kubernetes resources
         run: |
           kubectl get pods
