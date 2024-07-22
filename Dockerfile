@@ -7,7 +7,7 @@ RUN apt-get update && \
 ENV PATH="/usr/games:${PATH}"
 
 COPY wisecow.sh /app/wisecow.sh
-
+#Set work dir
 WORKDIR /app
 # Give execution permission
 RUN chmod +x wisecow.sh
