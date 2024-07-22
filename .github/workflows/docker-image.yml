@@ -1,45 +1,65 @@
-name: Deploy to Kubernetes
+name: Build, Push Docker, and Deploy to Kubernetes
 
 on:
   push:
     branches:
-      - main # or the branch you want to deploy from
+      - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Kubernetes
-      uses: azure/setup-kubectl@v1
-      with:
-        version: '1.24.0' # Specify the desired kubectl version
+      - name: Login to Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Configure kubectl
-      run: |
-        echo "${{ secrets.KUBE_CA }}" | base64 --decode > /tmp/ca.crt
-        kubectl config set-cluster minikube \
-          --server=${{ secrets.KUBE_SERVER }} \
-          --certificate-authority=/tmp/ca.crt
-        kubectl config set-context minikube \
-          --cluster=minikube \
-          --user=minikube \
-          --namespace=default
-        kubectl config use-context minikube
-      env:
-        KUBE_CA: ${{ secrets.KUBE_CA }}
-        KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t singhritik09/wisecowcontainer1:latest .
+          docker push singhritik09/wisecowcontainer1:latest
 
-    - name: Deploy to Kubernetes
-      run: |
-        kubectl apply -f deployment.yml
-        kubectl apply -f service.yml
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
 
-    - name: Port-forward service
-      run: |
-        kubectl port-forward service/wisecow-service 4499:4499 &
-        sleep 10 # Give it time to establish the port-forward
-        curl http://localhost:4499 # Test the port-forward
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Kubernetes
+        uses: azure/setup-kubectl@v1
+        with:
+          version: '1.24.0' # Specify the desired kubectl version
+
+      - name: Configure kubectl
+        run: |
+          echo "${{ secrets.KUBE_CA }}" | base64 --decode > /tmp/ca.crt
+          kubectl config set-cluster minikube \
+            --server=${{ secrets.KUBE_SERVER }} \
+            --certificate-authority=/tmp/ca.crt
+          kubectl config set-context minikube \
+            --cluster=minikube \
+            --user=minikube \
+            --namespace=default
+          kubectl config use-context minikube
+        env:
+          KUBE_CA: ${{ secrets.KUBE_CA }}
+          KUBE_SERVER: ${{ secrets.KUBE_SERVER }}
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+
+      - name: Port-forward service
+        run: |
+          kubectl port-forward service/wisecow-service 4499:4499 &
+          sleep 10 # Give it time to establish the port-forward
+          curl http://localhost:4499 # Test the port-forward
