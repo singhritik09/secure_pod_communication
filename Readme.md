@@ -1,6 +1,10 @@
 # Wisecow Application
 The Wisecow application is a web server that uses fortune and cowsay to display quotes in a browser. This repository includes a Docker setup, GitHub Actions workflow for CI/CD, and Kubernetes deployment for the application.
 
+![Screenshot 2024-07-23 022202](https://github.com/user-attachments/assets/9c11170b-4469-4b8b-bbd5-994e51928e35)
+
+![Uploading Screenshot 2024-07-23 021940.png…]()
+
 ## Features
 Dockerized Application: Containerized using Docker.
 CI/CD Pipeline: Automated build, push, and deployment using GitHub Actions.
