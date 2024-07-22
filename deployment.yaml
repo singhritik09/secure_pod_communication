@@ -2,10 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: wisecow-deployment
-  labels:
-    app: wisecow
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: wisecow
@@ -16,9 +14,6 @@ spec:
     spec:
       containers:
       - name: wisecow
-        image: singhritik09/wisecontainer:latest
+        image: singhritik09/wisecowcontainer1:latest
         ports:
         - containerPort: 4499
-        env:
-        - name: PATH
-          value: "/usr/games:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
