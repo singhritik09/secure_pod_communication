@@ -59,9 +59,10 @@ jobs:
 
       - name: Apply Kubernetes manifests
         run: |
+          minikube start
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
-
+          minikube service wisecow-service
       - name: Get Kubernetes resources
         run: |
           kubectl get pods
