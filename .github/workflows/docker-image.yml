@@ -13,16 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
+      - name: Login to Container Registry
+        uses: docker/login-action@v1
         with:
+          registry: docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push
         run: |
           docker build -t singhritik09/wisecow:latest .
-          docker push singhritik09/wisecow:latest
+          docker push singhritik09/myapp:latest
