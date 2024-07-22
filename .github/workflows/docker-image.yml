@@ -1,4 +1,4 @@
-name: Build, Push, and Deploy to Kubernetes
+name: Build, Push Docker, and Deploy to Kubernetes
 
 on:
   push:
@@ -25,18 +25,15 @@ jobs:
           docker build -t singhritik09/wisecontainer:latest .
           docker push singhritik09/wisecontainer:latest
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Kubernetes
+      - name: Setup kubectl
         uses: azure/setup-kubectl@v1
         with:
-          version: v1.18.15
+          version: 'latest'
+
+      - name: Configure kubectl
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
 
       - name: Deploy to Kubernetes
         run: |

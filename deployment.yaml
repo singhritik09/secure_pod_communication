@@ -5,7 +5,7 @@ metadata:
   labels:
     app: wisecow
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: wisecow
@@ -21,4 +21,4 @@ spec:
         - containerPort: 4499
         env:
         - name: PATH
-          value: "/usr/games:${PATH}"
+          value: "/usr/games:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
