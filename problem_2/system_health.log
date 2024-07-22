@@ -1,0 +1,3 @@
+2024-07-23 00:53:49,530 - INFO - System Health Check started at 2024-07-23 00:53:49.530940
+2024-07-23 00:53:50,557 - WARNING - High memory usage detected: 96.1%
+2024-07-23 00:53:50,565 - WARNING - High number of running processes detected: 356
